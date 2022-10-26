@@ -25,11 +25,11 @@
     </div>
   </div>
   <!-- //?视频播放 -->
-  <video-player :name="name"></video-player>
+  <video-player :name="name" v-if="flag"></video-player>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs } from "vue";
+import { defineComponent, onMounted, reactive, ref, toRefs } from "vue";
 import { useMovieDetailStore } from "@/store/movieDetail.store";
 import videoPlayer from "@/components/videoPlayer/VideoPlayer.vue";
 
@@ -57,6 +57,7 @@ export default defineComponent({
     test();
 
     //?从localStorage中初始化数据
+    const flag = ref(false); //先传值后渲染，防止video拿不到数据
     onMounted(() => {
       const store = useMovieDetailStore();
       state.name = store.name;
@@ -72,9 +73,10 @@ export default defineComponent({
       state.description = store.description;
       state.doubanVotes = store.doubanVotes;
       state.doubanRating = store.doubanRating;
+      flag.value = true;
     });
 
-    return { useMovieDetailStore, ...toRefs(state), test };
+    return { useMovieDetailStore, ...toRefs(state), test, flag };
   },
 });
 </script>

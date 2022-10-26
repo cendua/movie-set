@@ -16,20 +16,19 @@
         </span>
       </div>
       <!-- 播放区域 -->
-      <video controls ref="videoPlayer">
+      <video ref="video" class="video-js">
         <source />
       </video>
     </div>
   </div>
-  <div>
-    <video src=""></video>
-  </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, reactive, toRefs, ref } from "vue";
-// import "videojs-contrib-hls";
-// import videojs from "videojs";
+
+import videojs from "video.js";
+import "video.js/dist/video-js.css";
+
 import * as Api from "@/api";
 
 export default defineComponent({
@@ -38,53 +37,63 @@ export default defineComponent({
     const state = reactive({
       playList: {},
       qianmentUrl: "",
+      playerOptions: {},
+      name: props.name,
     });
+
+    console.log("nnnnnn", props.name);
 
     onMounted(() => {
       getIqyUrls();
-      setTimeout(() => {
-        initVideoer();
-      }, 10);
     });
 
     //?收发测试
     async function test2() {}
 
     //?获取后端iqy链接
-
     async function getIqyUrls() {
+      console.log("props名字", state.name);
       const tmp = await Api.getIqy(props.name);
       state.playList = tmp.data.data;
       console.log(tmp.data);
     }
 
-    //?点击播放
-    async function playVideo(url) {
-      // console.log("点击进行播放");
+    //?点击获取m3u8   //?点击播放？？
+    async function playVideo(url: String) {
+      // console.log("对应", url);
       //?获取url=>解析=>得到m3u8格式=>进行播放
-      // console.log(url);
       const res = await Api.urlAnalysis(url);
       state.qianmentUrl = res.data.url;
-      console.log(state.qianmentUrl);
+      console.log("千梦", state.qianmentUrl);
+
+      videoInit(res.data.url);
     }
 
-    //?配置video
-    const videoPlayer = ref();
-    function initVideoer() {
-      const option = {
-        autoplay: false,
-        controls: true,
-        sources: [
-          {
-            src: "/apis/attachFiles/admin/2020/6/2016561465586925611.m3u8",
-            type: "application/x-mpegURL",
-          },
-        ],
-      };
-      videojs(videoPlayer.value, option);
+    // src: "//vjs.zencdn.net/v/oceans.mp4",
+    // type: "video/mp4",
+    // //?配置video
+    const video = ref();
+    function videoInit(url: any) {
+      videojs(
+        video.value,
+        {
+          width: 960,
+          height: 400,
+          controls: true,
+          sources: [
+            {
+              src: url,
+              type: "application/x-mpegURL",
+            },
+          ],
+        },
+        function () {
+          videojs.log("播放器已准备好了");
+        }
+      );
     }
 
-    return { getIqyUrls, ...toRefs(state), playVideo, videoPlayer };
+    return { getIqyUrls, ...toRefs(state), playVideo, video };
   },
 });
 </script>

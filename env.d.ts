@@ -10,3 +10,9 @@ declare module "*.vue" {
 declare module "axios";
 
 declare module "element-plus";
+
+declare module "vue3-video-play";
+
+declare module "videojs";
+
+declare module "mui-player";

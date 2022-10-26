@@ -20,12 +20,6 @@ export async function getImdbItems() {
   return res;
 }
 
-//?获取后端解析后的爱奇艺m3u8链接
-// export async function getIqy() {
-//   const res = await postax("/iqy", { search: "蜡笔小新" });
-//   return res;
-// }
-
 //?获取后端爬取的iqy链接
 export async function getIqy(name: String) {
   const url = "/api/toto";

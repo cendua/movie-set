@@ -2,7 +2,7 @@
   <div>我是main</div>
   <div class="main-container">
     <span>视频框</span>
-    <video ref="player" class="video-js">
+    <video ref="player" class="video-js" :name="name">
       <source />
     </video>
   </div>
